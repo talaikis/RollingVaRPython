@@ -7,11 +7,12 @@ import time
 
 scriptStart = time.time()
 
+
 sym = ["S&P500"]
 
-#connect to DB
+
+#connect to MySQL
 def connect_DB():
-    # connect to <a href="http://www.talaikis.com/mysql/">MySQL</a>
     db_host = '127.0.0.1'
     db_user = 'root'
     db_pass = '8h^=GP655@740u9'
@@ -21,25 +22,29 @@ def connect_DB():
     
     return con
 
-#disconnect from databse
+
+#disconnect from database
 def disconnect(con):
     # disconnect from server
     con.close()
 
+    
 #get data
 def req_sql(sym, con):
     # Select all of the historic close data
-    sql = """SELECT DATE_TIME, CLOSE FROM `"""+sym+"""` WHERE PERIOD = 1440 ORDER BY DATE_TIME ASC;"""
+    sql = """SELECT DATE_TIME, CLOSE FROM `""" + sym + """` WHERE PERIOD = 1440 ORDER BY DATE_TIME ASC;"""
 
      #create a pandas dataframe
     df = pd.read_sql_query(sql, con=con, index_col='DATE_TIME')
 
     return df
 
-#using THE MULTIVARIATE NORMAL VARIANCE–COVARIANCE APPROACH
+
+#using THE MULTIVARIATE NORMAL VARIANCEâ€“COVARIANCE APPROACH
 def VaR(value, confidence_level, returns_mean, returns_volatility):
     alpha = norm.ppf(1-confidence_level, mean, volatility)
     return value - value*(alpha + 1)
+
 
 if __name__ == "__main__":
     con = connect_DB()
